@@ -10,13 +10,14 @@ from typing import Any, Dict, Optional
 import numpy as np
 from torch.utils.data import Dataset
 
+from streaming.base.array import Array
 from streaming.base.format import reader_from_json
 from streaming.base.index import Index, get_index_basename
 
 __all__ = ['LocalDataset']
 
 
-class LocalDataset(Dataset):
+class LocalDataset(Array, Dataset):
     """A streaming dataset whose shards reside locally as a pytorch Dataset.
 
     Args:
@@ -51,7 +52,7 @@ class LocalDataset(Dataset):
         """
         return self.index.total_samples
 
-    def __getitem__(self, sample_id: int) -> Dict[str, Any]:
+    def get_item(self, sample_id: int) -> Dict[str, Any]:
         """Get sample by global sample ID.
 
         Args:

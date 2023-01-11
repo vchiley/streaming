@@ -16,6 +16,7 @@ from filelock import FileLock
 from numpy.typing import NDArray
 from torch.utils.data import IterableDataset
 
+from streaming.base.array import Array
 from streaming.base.compression import decompress
 from streaming.base.format import reader_from_json
 from streaming.base.format.base.reader import FileInfo
@@ -89,7 +90,7 @@ class _PartitionState:
             sleep(TICK)
 
 
-class StreamingDataset(IterableDataset):
+class StreamingDataset(Array, IterableDataset):
     """A streaming pytorch IterableDataset that is also resumable mid-epoch.
 
     Checkpoints are represented in JSON as follows:
@@ -235,6 +236,15 @@ class StreamingDataset(IterableDataset):
         # downloaded).
         self._shard_states = create_shared_memory(name=f'{self._prefix}_shard_states',
                                                   size=len(self.shard_sizes) * np.uint8(0).nbytes)
+
+    @property
+    def size(self) -> int:
+        """Get the size of the dataset in samples.
+
+        Returns:
+            int: Number of samples.
+        """
+        return self.index.total_samples
 
     @property
     def next_epoch(self) -> int:
@@ -571,7 +581,7 @@ class StreamingDataset(IterableDataset):
 
         return lock, shard_states
 
-    def __getitem__(self, idx: int) -> Any:
+    def get_item(self, idx: int) -> Any:
         """Get sample by global index, blocking to download its shard if not present.
 
         Args:
