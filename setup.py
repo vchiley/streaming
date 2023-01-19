@@ -64,13 +64,13 @@ extra_deps['dev'] = [
     'docformatter>=1.4',
     'jupyter==1.0.0',
     'pre-commit>=2.18.1,<3',
-    'pytest==7.2.0',
+    'pytest==7.2.1',
     'pytest_codeblocks==0.16.1',
     'pytest-cov>=4,<5',
     'toml==0.10.2',
-    'yamllint==1.28.0',
+    'yamllint==1.29.0',
     'moto>=4.0,<5',
-    'fastapi==0.88.0',
+    'fastapi==0.89.1',
     'pydantic==1.10.4',
     'uvicorn==0.20.0',
 ]
@@ -88,9 +88,9 @@ extra_deps['docs'] = [
     'sphinx==4.4.0',
     'sphinx_panels==0.6.0',
     'sphinxcontrib-images==0.9.4',
-    'sphinxcontrib.katex==0.9.3',
+    'sphinxcontrib.katex==0.9.4',
     'sphinxemoji==0.2.0',
-    'sphinxext.opengraph==0.7.4',
+    'sphinxext.opengraph==0.7.5',
 ]
 
 extra_deps['all'] = set(dep for deps in extra_deps.values() for dep in deps)
