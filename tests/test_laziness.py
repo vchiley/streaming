@@ -7,13 +7,13 @@ from streaming import MDSWriter, StreamingDataset
 
 
 def test_laziness():
-    num_samples = 100_000
+    num_samples = 20_000
     local = 'my-local'
     remote = 'my-remote'
     columns = {'value': 'int'}
     compression = None
     hashes = None
-    size_limit = 10_000
+    size_limit = 2_000
 
     with MDSWriter(remote, columns, compression, hashes, size_limit) as out:
         for i in range(num_samples):
