@@ -2,14 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import shutil
+from typing import Tuple
+
+import pytest
 
 from streaming import MDSWriter, StreamingDataset
 
 
-def test_laziness():
-    num_samples = 20_000
-    local = 'my-local'
-    remote = 'my-remote'
+@pytest.mark.usefixtures('remote_local')
+def test_laziness(remote_local: Tuple[str, str]):
+    num_samples = 100_000
+    remote, local = remote_local
     columns = {'value': 'int'}
     compression = None
     hashes = None
@@ -49,6 +52,3 @@ def test_laziness():
     for i in range(num_samples):
         sample = dataset[i]
         assert sample['value'] == i
-
-    shutil.rmtree(remote)
-    shutil.rmtree(local)
