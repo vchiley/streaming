@@ -69,6 +69,13 @@ If you have any questions, please feel free to reach out to us on [Twitter](htt
 
    api_reference/*
 
+.. toctree::
+   :hidden:
+   :caption: Help
+   :maxdepth: 1
+   
+   help/troubleshooting.md
+
 .. _Twitter: https://twitter.com/mosaicml
 .. _Email: mailto:community@mosaicml.com
 .. _Slack: https://join.slack.com/t/mosaicml-community/shared_invite/zt-w0tiddn9-WGTlRpfjcO9J5jyrMub1dg
