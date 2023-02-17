@@ -123,8 +123,9 @@ class StreamingDataset(Array, IterableDataset):
         validate_hash (str, optional): Optional hash or checksum algorithm to use to validate
             shards. Defaults to ``None``.
         shuffle_seed (int): Seed for Deterministic data shuffling. Defaults to ``9176``.
-        num_canonical_nodes (int, optional): Canonical number of nodes for shuffling with resumption.
-            Defaults to ``None``, which is interpreted as the number of nodes of the initial run.
+        num_canonical_nodes (int, optional): Canonical number of nodes for shuffling with
+            resumption. Defaults to ``None``, which is interpreted as the number of nodes of the
+            initial run.
         batch_size (int, optional): Batch size of its DataLoader, which affects how the dataset is
             partitioned over the workers. Defaults to ``None``.
     """
@@ -208,8 +209,8 @@ class StreamingDataset(Array, IterableDataset):
         prefix_int = int(seed_rng.integers(1 << 24))
         self._prefix = f'{prefix_int:06x}'
 
-        # Should be a unique shared directory per each StreamingDataset instantiation to avoid a conflict
-        # between a different StreamingDataset instance on a same machine.
+        # Should be a unique shared directory per each StreamingDataset instantiation to avoid a
+        # conflict between a different StreamingDataset instance on a same machine.
         start_time = time()
         while True:
             self._shared_dir = os.path.join(os.path.sep, 'tmp', 'streaming', self._prefix)
