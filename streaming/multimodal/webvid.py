@@ -43,7 +43,7 @@ class StreamingInsideWebVid(StreamingDataset):
             partitioned over the workers. Defaults to ``None``.
     """
 
-    def __getitem__(self, idx: int) -> Any:
+    def get_item(self, idx: int) -> Any:
         """Get the sample at the index.
 
         Args:
@@ -52,7 +52,7 @@ class StreamingInsideWebVid(StreamingDataset):
         Returns:
             Any: The sample.
         """
-        obj = super().__getitem__(idx)
+        obj = super().get_item(idx)
         # Processing goes here.
         return obj
 
@@ -61,7 +61,7 @@ class StreamingOutsideGIWebVid(StreamingDataset):
     """Streaming WebVid dataset.
 
     Videos are stored "outside" the shards, as a file per video. The extra download happens in
-    __getitem__ ("GI"), when samples are requested by the dataloader.
+    get_item ("GI"), when samples are requested by the dataloader.
 
     Args:
         local (str): Local dataset directory where shards are cached by split.
@@ -114,7 +114,7 @@ class StreamingOutsideGIWebVid(StreamingDataset):
         self.extra_local = extra_local
         self.extra_remote = extra_remote
 
-    def __getitem__(self, idx: int) -> Any:
+    def get_item(self, idx: int) -> Any:
         """Get the sample at the index.
 
         Args:
@@ -123,7 +123,7 @@ class StreamingOutsideGIWebVid(StreamingDataset):
         Returns:
             Any: The sample.
         """
-        obj = super().__getitem__(idx)
+        obj = super().get_item(idx)
 
         if self.extra_local and self.extra_remote:
             rel_path = obj['content_path']
@@ -197,7 +197,7 @@ class StreamingOutsideDTWebVid(StreamingDataset):
         self.extra_local = extra_local
         self.extra_remote = extra_remote
 
-    def __getitem__(self, idx: int) -> Any:
+    def get_item(self, idx: int) -> Any:
         """Get the sample at the index.
 
         Args:
@@ -206,7 +206,7 @@ class StreamingOutsideDTWebVid(StreamingDataset):
         Returns:
             Any: The sample.
         """
-        obj = super().__getitem__(idx)
+        obj = super().get_item(idx)
 
         if self.extra_local and self.extra_remote:
             rel_path = obj['content_path']
@@ -266,7 +266,7 @@ class StreamingOutsideDTWebVid(StreamingDataset):
             self._download_or_skip_shard(shard_states_lock, shard_states, shard_id, False)
 
             # Predownload the sample's extra data.
-            obj = super().__getitem__(sample_id)
+            obj = super().get_item(sample_id)
             if self.extra_local and self.extra_remote:
                 rel_path = obj['content_path']
                 local = os.path.join(self.extra_local, rel_path)
