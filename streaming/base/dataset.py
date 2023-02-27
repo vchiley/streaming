@@ -128,9 +128,12 @@ class StreamingDataset(Array, IterableDataset):
             initial run.
         batch_size (int, optional): Batch size of its DataLoader, which affects how the dataset is
             partitioned over the workers. Defaults to ``None``.
+        partition_algo (str): Which partitioning algorithm to use. Defaults to ``orig``.
+        shuffle_algo (str): Which shuffling algorithm to use. Defaults to ``py2s``.
     """
 
     def __init__(self,
+                 *,
                  local: str,
                  remote: Optional[str] = None,
                  split: Optional[str] = None,
@@ -142,7 +145,9 @@ class StreamingDataset(Array, IterableDataset):
                  validate_hash: Optional[str] = None,
                  shuffle_seed: int = 9176,
                  num_canonical_nodes: Optional[int] = None,
-                 batch_size: Optional[int] = None):
+                 batch_size: Optional[int] = None,
+                 partition_algo: str = 'orig',
+                 shuffle_algo: str = 'py2s') -> None:
         self.local = local
         self.remote = remote
         self.split = split or ''  # Empty string for os.path.join().
@@ -152,6 +157,8 @@ class StreamingDataset(Array, IterableDataset):
         self.download_retry = download_retry
         self.download_timeout = download_timeout
         self.validate_hash = validate_hash or None
+        self.partition_algo = partition_algo
+        self.shuffle_algo = shuffle_algo
 
         if self.download_retry < 0:
             raise ValueError('Parameter ``download_retry`` must be non-negative')
@@ -413,8 +420,8 @@ class StreamingDataset(Array, IterableDataset):
                                         world.num_nodes, world.ranks_per_node,
                                         world.workers_per_rank, self.batch_size, sample_in_epoch)
             if self.shuffle:
-                mapping = get_shuffle(self.shard_sizes, self.num_canonical_nodes,
-                                      self.shuffle_seed, epoch)
+                mapping = get_shuffle(self.shuffle_algo, self.shard_sizes,
+                                      self.num_canonical_nodes, self.shuffle_seed, epoch)
                 sample_ids = np.where(sample_ids == -1, -1, mapping[sample_ids])
             sample_ids.tofile(tmp_filename)
             os.rename(tmp_filename, filename)
